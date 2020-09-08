@@ -1,0 +1,211 @@
+--Trabalho 1 PF
+--Hendrik Abdalla Hermann 11911BCC034 e Marcelo Junio de Oliveira Teixeira 11911BCC024
+
+--Ex 1:
+
+triangulo::(Int,Int,Int)->String
+triangulo (x,y,z)
+ | not(x+y+z == 180) || x == 0 || y == 0 || z == 0 = "Nao eh Triangulo"
+ | x == 90 || y == 90 || z == 90 = "Triangulo Retangulo"
+ | x == 60 && y == 60 && z == 60 = "Triangulo Equilatero"
+ | x > 90 || y > 90 || z > 90 = "Triangulo Obtuso"
+ | otherwise = "Triangulo Simples"
+ 
+--Ex 2:
+
+equacao::(Float,Float,Float)->(Float,Float,String)
+equacao (a,b,c) 
+ | a == 0 = (c/b,0,"Sucesso")
+ | ((b^2) - (4 * a * c)) < 0 = (0,0,"Erro: Delta Negativo")
+ | otherwise = (((-b + sqrt((b^2) - (4 * a * c))) / (2 * a)), ((-b - sqrt((b^2) - (4 * a * c)) / (2 * a))),"Sucesso")
+ 
+--Ex 3:
+
+type Data = (Int,Int,Int)
+
+calcula::(Float,Data,Data)->Float
+calcula (x, (da,ma,aa), (dn,mn,an))
+ | aa - an < 2 = x*0.15
+ | aa - an == 2 && ma < mn = x*0.15
+ | aa - an == 2 && ma == mn && da < dn = x*0.15
+ | aa - an < 10 = x*0.40
+ | aa - an == 10 && ma <= mn = x*0.40
+ | aa - an == 10 && ma == mn && da < dn = x*0.40
+ | aa - an > 70 = x*0.5
+ | aa - an == 70 && ma > mn = x*0.5
+ | aa - an == 70 && ma == mn && da >= dn = x*0.5
+ | otherwise = x
+ 
+--Ex 4:
+
+gera1::[Int]
+gera1 = [n^2 | n <- drop 3 [1..15], odd n, n < 15]
+
+gera2::[(Int,Int)]
+gera2 = [(x, y) | x <- [1..15], y <- [x..x*2], x < 5]
+
+gera3::[Int]
+gera3 =  [x | y<-[1..15], y >= 10, x<-[1..y]]
+
+gera4::[(Int,Int)]
+gera4 = [(x, y) | x <- [1..15], y <- [x+1], odd x]
+
+gera5::[Int]
+gera5 = [(x + y) | x <- [1..15], y <- [x+1], odd x]
+
+--Ex 5:
+
+--A
+contaNegM2::[Int]->Int
+contaNegM2 xs = length [x | x <- xs, x < 0, mod x 2 == 0]
+
+--B
+listaNegM2::[Int]->[Int]
+listaNegM2 xs = [x | x <- xs, x < 0, mod x 2 == 0]
+
+--Ex 6:
+
+distancias::[(Float,Float)]->[Float]
+distancias xs = [sqrt(x^2 + y^2) | (x,y)<-xs]
+
+--Ex 7:
+
+fatores::Int->[Int]
+fatores n = [x | x<-[1..n], x <= n, mod n x == 0]
+
+primos::Int->Int->[Int]
+primos x y = [n | n<-[x..y], fatores n == [1, n]]
+
+--Ex 8:
+
+mdc::Int->Int->Int
+mdc m 0 = m
+mdc m n = mdc n (mod m n)
+
+mmcD::Int->Int->Int
+mmcD a b = div (a * b) (mdc a b)
+
+mmc::Int->Int->Int->Int
+mmc a b c = mmcD a (mmcD b c)
+
+--Ex 9:
+
+serie::Float->Int->Float
+serie x n
+ | n == 1 = 1 / x
+ | odd n = (fromIntegral(n) / x) + (serie x (n-1))
+ | otherwise = (x / fromIntegral(n)) + (serie x (n-1))
+
+--Ex 10:
+
+verifyFizzbuzz::Int->String
+verifyFizzbuzz y
+ | mod y 15 == 0 = "FizzBuzz"
+ | mod y 3 == 0 = "Fizz"
+ | mod y 5 == 0 = "Buzz"
+ | otherwise = "No"
+
+fizzbuzz::Int->[String]
+fizzbuzz x = [verifyFizzbuzz y | y <- [1..x]]
+
+--Ex 11:
+
+conta::Int->[Int]->Int
+conta x [] = 0
+conta y (x:xs) = if y == x then 1 + conta y xs else conta y xs
+conta_ocorrencia y z (x:xs) = (conta y (x:xs), conta z (x:xs))
+
+--Ex 12:
+
+--Usa a funcao conta do Ex anterior
+unica_ocorrencia::Int->[Int]->Bool
+unica_ocorrencia y x = if (conta y x) == 1 then True else False
+
+--Ex 13:
+
+intercala::[t]->[t]->[t]
+intercala l1 [] = l1
+intercala [] l2 = l2
+intercala (x:xs) (y:ys) = x:y:intercala xs ys
+
+--Ex 14:
+
+type Contato = (String,String,String,String)
+
+recupera_contato::String->[Contato]->String
+recupera_contato email [] = "Email desconhecido"
+recupera_contato email ((contato, _, _, emailC):xs) = if emailC == email
+ then contato
+ else recupera_contato email xs
+
+--Ex 15:
+
+type Pessoa = (String, Float, Int, Char)
+pessoas :: [Pessoa]
+pessoas = [("Rosa", 1.66, 27,'F'),
+ ("João", 1.85, 26, 'C'),
+ ("Maria", 1.55, 62, 'S'),
+ ("Jose", 1.78, 42, 'C'),
+ ("Paulo", 1.93, 25, 'S'),
+ ("Clara", 1.70, 33, 'C'),
+ ("Bob", 1.45, 21, 'C'),
+ ("Rosana", 1.58,39, 'S'),
+ ("Daniel", 1.74, 72, 'S'),
+ ("Jocileide", 1.69, 18, 'S')]
+
+alturaMedia::[Pessoa]->Float
+alturaMedia y = (sum [altura | (_, altura, _, _)<-y]) / fromIntegral(length y)
+
+menorIdade::[Pessoa]->Int
+menorIdade y = minimum [idade | (_, _, idade, _)<-y]
+
+pessoaMaisVelha::[Pessoa]->String
+pessoaMaisVelha [(nome, _, _, estadoC)] = nome ++ " (" ++ [estadoC] ++ ")"
+pessoaMaisVelha ((nome, altura, idade, estadoC):(nome2, altura2, idade2, estadoC2):xs) = if idade >= idade2 
+ then pessoaMaisVelha ((nome, altura, idade, estadoC):xs)
+ else pessoaMaisVelha ((nome2, altura2, idade2, estadoC2):xs)
+
+cinquentaOuMais::[Pessoa]->[Pessoa]
+cinquentaOuMais y = [(nome, altura, idade, estadoC) | (nome, altura, idade, estadoC)<-y, idade >= 50]
+
+pessoasCasadas::Int->[Pessoa]->Int
+pessoasCasadas x y = length [(nome, altura, idade, estadoC) | (nome, altura, idade, estadoC)<-y, idade > x, estadoC == 'C']
+
+--Ex 16:
+
+insere_ord::Ord t =>t->[t]->[t]
+insere_ord y [] = [y]
+insere_ord y (x:xs) 
+ | x >= y = y:x:xs
+ | otherwise = x:(insere_ord y xs)
+
+--Ex 17:
+
+reverte::[t]->[t]
+reverte [] = []
+reverte (x:xs) = reverte xs ++ [x]
+
+--Ex 18:
+
+membro::Eq t =>t->[t]->Bool
+membro y [] = False
+membro y (x:xs)
+  | y == x = True
+  | otherwise = membro y xs
+
+sem_repetidos::Eq t =>[t]->[t]
+sem_repetidos [] = []
+sem_repetidos (x:xs)
+  | membro x xs = sem_repetidos (xs)
+  | otherwise = x:sem_repetidos (xs)
+
+--Ex 19:
+
+notas::[Int]
+notas = [1, 2, 5, 10, 20, 50, 100]
+
+notasTroco::Int->[[Int]]
+notasTroco 0 = [[]]
+notasTroco y = [x:xs | x<-notas, x <= y, xs<-notasTroco (y - x)]
+
+--Ex 20:
